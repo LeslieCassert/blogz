@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Build A Blog!</h1>
+{% if new_post|length == 0 %} <!--if tasks has anything in it-->
+<p>No Posts Yet</p>
+{% else %}
+
+{% endif %} <!--ends the conditional-->
+
+<hr  />
+    {% for post in new_post %}
+    <h2><a href = "/blog?id={{post.id}}">{{post.title}}</a></h2>
+    <p>{{post.body}}</p>
+    {% endfor %}
+
+{% endblock %}
