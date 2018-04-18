@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+{% for author in authors %}
+<p>
+    {author.owner.username}
+</p>
+{% endfor%}
+
+{% endblock %}
