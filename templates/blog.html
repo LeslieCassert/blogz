@@ -5,7 +5,12 @@
 <hr  />
     {% for post in new_post %}
     <h2><a href = "/blog?id={{post.id}}">{{post.title}}</a></h2>
-    <p>{{post.body}}</p>
+    <p class = "body">{{post.body}}</p>
+
+    
+    <p class="post_author">Written by <a href="/blog?user={{post.owner.username}}">{{post.owner.username}}</a></p>
+    
+
     {% endfor %}
 
 {% endblock %}

@@ -40,9 +40,8 @@ class User(db.Model):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():  
-    authors = Blog.query.filter_by(owner=owner).all()
-    
-    return render_template("index.html")
+    authors = User.query.all()   
+    return render_template("index.html", authors=authors)
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
@@ -53,6 +52,7 @@ def newpost():
         body = request.form['body']
         title_error=''
         body_error = ''
+        
         owner = User.query.filter_by(username=session['username']).first()
         
         if len(title) == 0:
@@ -72,15 +72,25 @@ def newpost():
 
 
 @app.route('/blog', methods=['POST','GET'])
-def blog():
-    
+def blog(): 
     posts = Blog.query.all()
+    users = User.query.all()
     id = request.args.get('id')
-    id_on_page = Blog.query.filter_by(id=id).first()
-    if not id_on_page:
-        return render_template ("blog.html",new_post=posts)
-    else:
+    userID = request.args.get('user')
+    if id:
+        id_on_page = Blog.query.filter_by(id=id).first()
         return render_template("post.html", post=id_on_page)
+
+    elif userID:
+        
+        single_page = User.query.filter_by(username=userID).first()
+        author_posts = Blog.query.filter_by(owner_id=single_page.id).all()
+        return render_template("singleUser.html", posts=author_posts)
+
+    else:
+        
+        return render_template("blog.html", new_post=posts)
+
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -111,12 +121,14 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         verify= request.form['verify']
+        existinguser_error = "User already exists"
 
         existing_user = User.query.filter_by(username=username).first()
         if not existing_user:
             username_error = ''
             password_error = ''
             verify_error = ''
+
 
             if len(username) == 0 or len(username) < 3 or len(username) > 20 or ' ' in username:
                 username_error = "That's not a valid username" 
@@ -139,8 +151,13 @@ def signup():
                 return render_template('signup.html', username_error=username_error, password_error=password_error, verify_error=verify_error, username=username)
 
         else:
-            flash("User already exists", 'error') #flashes aren't working
+            return render_template("signup.html",existinguser_error=existinguser_error)
     return render_template("signup.html")
+
+@app.route('/singleUser')
+def singleUser():
+    authors = User.query.all()
+    return render_template('singleUser.html')
 
 @app.route('/logout', methods = ['GET'])
 def logout():

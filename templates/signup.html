@@ -8,6 +8,7 @@
         <td>
             <input name = "username" type = "text"  value = "{{username}}"/>
             <span class = "error"> {{username_error}}</span>
+            
         </td>
     </tr>
         <br>
@@ -27,9 +28,15 @@
         <td>
             <input name = "verify" type = "password"  /><span class = "error">{{verify_error}}</span>
         </td>
+        <tr>
+            <td>
+                <p class = 'error'>{{existinguser_error}}</p>
+            </td>
+        </tr>
 
     </table>
     <input type="submit" value="Sign Up">
+
 
 </form>
 
